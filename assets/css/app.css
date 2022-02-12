@@ -1,0 +1,10 @@
+.app-container {
+  height: 100vh;
+  display: grid;
+  grid-template-rows: 56px 1fr;
+}
+
+.auth-content {
+  display: grid;
+  place-items: center;
+}
