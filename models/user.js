@@ -1,8 +1,9 @@
 const mongoose = require('mongoose');
 const { isEmail } = require('validator');
+const bcrypt = require('bcrypt');
 
 const Schema = new mongoose.Schema({
-  usernmae: {
+  username: {
     type: String,
     required: [true, 'Please enter your name']
   },
@@ -14,7 +15,6 @@ const Schema = new mongoose.Schema({
   },
   role: {
     type: String,
-    required: [true, 'Please choose a role']
   },
   password: {
     type: String,
@@ -22,9 +22,15 @@ const Schema = new mongoose.Schema({
     minlength: [8, 'Your passsword is too short']
   },
   work_at: {
-    type: Number,
-    required: [true, 'Company section cannot be blanked']
+    type: String,
   }
+});
+
+Schema.pre('save', async function(next){
+  const salt = await bcrypt.genSalt();
+  this.password = await bcrypt.hash(this.password, salt);
+
+  next();
 });
 
 module.exports = mongoose.model('user', Schema);

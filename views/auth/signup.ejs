@@ -8,21 +8,25 @@
         <div class="form-group">
           <label for="username">Username</label>
           <input type="text" id="username" class="form-control">
+          <small class="text-danger" id="username-invalid"></small>
         </div>
         <div class="form-group">
           <label for="email">Email</label>
           <input type="email" id="email" class="form-control">
+          <small class="text-danger" id="email-invalid"></small>
         </div>
         <div class="form-group">
           <label for="password">Password</label>
           <input type="password" id="password" class="form-control">
+          <small class="text-danger" id="password-invalid"></small>
         </div>
         <div class="form-group">
           <label for="password_confirmation">Confirm password</label>
           <input type="password" id="password_confirmation" class="form-control">
         </div>
-        <button class="btn btn-primary">Signup</button>
+        <button class="btn btn-primary" id="signup-btn">Signup</button>
       </form>
     </div>
   </div>
+  <script src="/assets/js/signup.js"></script>
 <%- include('partial/footer') %>

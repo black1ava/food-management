@@ -1,21 +1,15 @@
 const mongoose = require('mongoose');
-const { isEmail } = required('validator');
+const { isEmail } = require('validator');
 
 const Schema = new mongoose.Schema({
   name: {
     type: String,
-    required: [true, 'Please enter your company name']
-  },
-  province: {
-    type: String,
-    required: [true, 'Please enter your company location']
-  },
-  address: {
-    type: String,
-    required: [true, 'Please insert your company address']
+    required: [true, 'Please enter your company name'],
+    unique: true
   },
   email: {
     type: String,
+    unique: true,
     validate: [isEmail, 'Please enter a correct email']
   },
   phone: {
