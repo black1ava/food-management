@@ -2,9 +2,16 @@ const router = require('express').Router();
 const user = require('../models/user');
 const signupErrorHandling = require('../errorHandling/signup');
 const generateToken = require('../jwt/generateToken');
+const notAuthorized = require('../middlewares/notAuthorized');
 
 const minute = 60;
 const maxAge = 15 * minute;
+
+router.use(notAuthorized);
+
+router.route('/').get(function(req, res){
+  res.render('auth/signup');
+});
 
 router.route('/').post(async function(req, res){
   const { username, email, password } = req.body;

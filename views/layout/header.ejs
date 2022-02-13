@@ -9,6 +9,7 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
   <link rel="stylesheet" href="/assets/css/app.css">
+  <script src="/assets/js/logout.js"></script>
   <title>Document</title>
 </head>
 <body>
@@ -19,17 +20,22 @@
     </button>
     <div class="collapse navbar-collapse" id="navbar">
       <ul class="navbar-nav mr-auto">
-        <li-nav-item>
-          <a href="#" class="nav-link">Order</a>
-        </li-nav-item>
+        <li class="nav-item dropdown">
+          <a href="javascript:void(0)" class="nav-link dropdown-toggle" data-toggle="dropdown">
+            Companies
+          </a>
+          <div class="dropdown-menu">
+            <a href="/company/create" class="dropdown-item">Create company</a>
+          </div>
+        </li>
       </ul>
       <ul class="navbar-nav">
         <li class="nav-item dropdown">
-          <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">
+          <a href="javascript:void(0)" class="nav-link dropdown-toggle" data-toggle="dropdown">
             <%= user.username %>
           </a>
           <div class="dropdown-menu">
-            <a href="/logout" class="dropdown-item text-danger">Logout</a>
+            <a href="/logout" class="dropdown-item text-danger" id="logout">Logout</a>
           </div>
         </li>
       </ul>
