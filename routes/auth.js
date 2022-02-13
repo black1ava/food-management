@@ -1,9 +1,7 @@
-module.exports = function(app){
-  app.get('/login', function(req, res){
-    res.render('auth/login');
-  });
+const loginController = require('../controllers/login');
+const signupController = require('../controllers/signup');
 
-  app.get('/signup', function(req, res){
-    res.render('auth/signup');
-  });
+module.exports = function(app){
+  app.use('/login', loginController);
+  app.use('/signup', signupController);
 }
