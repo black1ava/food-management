@@ -16,5 +16,5 @@ module.exports = function(error){
     errors.email = 'This email is already exist'
   }
 
-  return errors;
+  return errors;k
 }
