@@ -21,6 +21,7 @@ async function signUserUp(signup){
     }
 
     window.location = '/';
+    return;
   }
 
   throw { password: 'Password is not matched' }

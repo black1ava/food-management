@@ -6,6 +6,7 @@ const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 const homeRoute = require('./routes/home');
 const companyRoute = require('./routes/company');
+const userRoute = require('./routes/user');
 
 const app = express();
 const { PORT, URI } = process.env;
@@ -25,6 +26,7 @@ mongoose.connection.once('open', function(){
 authRoute(app);
 homeRoute(app);
 companyRoute(app);
+userRoute(app);
 
 app.listen(PORT, function(){
   console.log(`Server is running on port ${ PORT }`);
