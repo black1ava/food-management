@@ -1,3 +1,45 @@
 <%- include('../layout/header') %>
-
+  <div class="card">
+    <div class="card-body">
+      <div class="card-header">
+        <h3>Create new company</h3>
+      </div>
+      <form>
+        <div class="form-group">
+          <label for="name">Company name</label>
+          <input type="text" id="name" class="form-control">
+        </div>
+        <div class="form-group">
+          <label for="email">Email</label>
+          <input type="email" id="email" class="form-control">
+        </div>
+        <div class="form-group">
+          <label for="phone">Phone number</label>
+          <div class="input-group">
+            <div class="input-group-prepend">
+              <span class="input-group-text">+855</span>
+            </div>
+            <input type="tel" id="phone" class="form-control">
+          </div>
+        </div>
+        <div class="form-group">
+          <div class="custom-control custom-checkbox">
+            <input type="checkbox" id="is-employer" class="custom-control-input" checked>
+            <label for="is-employer" class="custom-control-label">I am the employer of this company</label>
+          </div>
+        </div>
+        <div class="form-group">
+          <select id="role" class="custom-select app-hidden">
+            <option value="">Please choose a role</option>
+            <option value="service">Service</option>
+            <option value="food_service">Food service</option>
+            <option value="chef_manager">Chef manager</option>
+            <option value="cashier">Cashier</option>
+          </select>
+        </div>
+        <button class="btn btn-primary">Create</button>
+      </form>
+    </div>
+  </div>
+  <script src="/assets/js/company/create.js"></script>
 <%- include('../layout/footer') %>

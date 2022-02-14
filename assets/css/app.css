@@ -8,3 +8,7 @@
   display: grid;
   place-items: center;
 }
+
+.app-hidden {
+  display: none;
+}
