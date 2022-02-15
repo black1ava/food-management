@@ -3,6 +3,13 @@ const email = document.getElementById('email');
 const password = document.getElementById('password');
 const passwordConfirmation = document.getElementById('password_confirmation');
 const signupBtn = document.getElementById('signup-btn');
+const usernameInvalid = document.getElementById('username-invalid');
+const emailInvalid = document.getElementById('email-invalid');
+const passwordInvalid = document.getElementById('password-invalid');
+
+handleChange(username, usernameInvalid);
+handleChange(email, emailInvalid);
+handleChange(password, passwordInvalid);
 
 async function signUserUp(signup){
   if(signup.password === signup.passwordConfirmation){
@@ -40,9 +47,6 @@ signupBtn.addEventListener('click', async function(e){
   try {
     await signUserUp(signup);
   }catch(error){
-    const usernameInvalid = document.getElementById('username-invalid');
-    const emailInvalid = document.getElementById('email-invalid');
-    const passwordInvalid = document.getElementById('password-invalid');
 
     usernameInvalid.innerText = error.username ?? '';
     emailInvalid.innerText = error.email ?? '';

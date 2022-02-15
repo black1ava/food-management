@@ -19,18 +19,31 @@ isEmployer.addEventListener('change', function(){
 
 const name = document.getElementById('name');
 const email = document.getElementById('email');
+const employerEmail = document.getElementById('employer-email');
+const role = document.getElementById('role');
 
+const invalidEmail = document.getElementById('invalid-email');
+const invalidName = document.getElementById('invalid-name');
+const invalidPhone = document.getElementById('invalid-phone');
+const invalidEmployerEmail = document.getElementById('invalid-employer-email');
+const invalidRole = document.getElementById('invalid-role');
+
+handleChange(email, invalidEmail);
+handleChange(name, invalidName);
+handleChange(phone, invalidPhone);
+handleChange(employerEmail, invalidEmployerEmail);
+handleChange(role, invalidRole, 'select');
 
 const createBtn = document.getElementById('create-btn');
 
 createBtn.addEventListener('click', async function(e){
   e.preventDefault();
 
-  const get = await fetch('/user');
+  const get = await fetch('/api/v1/user');
   const user = await get.json();
-  
-  if(isEmployer.checked){
-    try {
+
+  try {
+    if(isEmployer.checked){
       const post = await fetch('/company/create', {
         method: 'POST',
         headers: {
@@ -39,20 +52,35 @@ createBtn.addEventListener('click', async function(e){
         body: JSON.stringify({
           name: name.value,
           email: email.value,
-          phone: '+855' + phone.value,
+          phone: phone.value,
+          role: 'employer',
           employer_id: user.id
         })
       });
-
+  
       const response = await post.json();
-
+  
       if(post.status === 400){
         throw response;
       }
+  
+      window.location = '/';
+    }else {
+      if(role.value === ''){
+        invalidRole.innerText = 'Please select your role'
+        return;
+      }
 
-      console.log(response);
-    }catch(error){
-      console.error(error);
+      if(employerEmail.value === ''){
+        invalidEmployerEmail.innerText = 'Please enter your employer email';
+        return;
+      }
     }
+  }catch(error){
+    const { name, email, phone } = error;
+
+    invalidName.innerText = name;
+    invalidEmail.innerText = email;
+    invalidPhone.innerText = phone;
   }
 });

@@ -5,7 +5,7 @@ const user = require('../models/user');
 
 router.use(authorized);
 
-router.route('/').get(function(req, res){
+router.route('/user').get(function(req, res){
   const token = req.cookies['authorized_token'];
 
   jwt.verify(token, process.env.SECRET, function(err, decodedToken){

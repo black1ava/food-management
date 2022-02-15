@@ -1,5 +1,6 @@
 const jwt = require('jsonwebtoken');
 const user = require('../models/user');
+const company = require('../models/company');
 
 module.exports = function(req, res, next){
   const token = req.cookies['authorized_token'];
@@ -10,7 +11,21 @@ module.exports = function(req, res, next){
         res.redirect('/login');
       }else{
         const $ = await user.findById(decodedToken.id);
-        res.locals.user = $;
+        
+        if($){
+          const companies = $.work_at;
+          const _companies = companies.map(function(c){
+            return company.findById(c.company_id);
+          });
+
+          const $companies = await Promise.all(_companies);
+
+          res.locals.user = $;
+          res.locals.companies = $companies;
+        }else{
+          res.locals.user = null;
+        }
+
         next();
       }
     });

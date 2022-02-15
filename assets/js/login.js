@@ -4,6 +4,9 @@ const loginBtn = document.getElementById('login-btn');
 const emailInvalid = document.getElementById('email-invalid');
 const passwordInvalid = document.getElementById('password-invalid');
 
+handleChange(email, emailInvalid);
+handleChange(password, passwordInvalid);
+
 async function logUserIn(email, password){
   const post = await fetch('/login', {
     method: 'post',

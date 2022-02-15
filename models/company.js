@@ -10,6 +10,7 @@ const Schema = new mongoose.Schema({
   email: {
     type: String,
     unique: true,
+    required: [true, 'Please enter your company email'],
     validate: [isEmail, 'Please enter a correct email']
   },
   phone: {
