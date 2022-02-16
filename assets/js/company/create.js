@@ -54,7 +54,8 @@ createBtn.addEventListener('click', async function(e){
           email: email.value,
           phone: phone.value,
           role: 'employer',
-          employer_id: user.id
+          employer_id: user.id,
+          employer_email: employerEmail.value
         })
       });
   
@@ -75,12 +76,36 @@ createBtn.addEventListener('click', async function(e){
         invalidEmployerEmail.innerText = 'Please enter your employer email';
         return;
       }
+
+      const post = await fetch('/company/create', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          name: name.value,
+          email: email.value,
+          phone: phone.value,
+          role: role.value,
+          user_id: user.id,
+          employer_email: employerEmail.value
+        })
+      });
+
+      const response = await post.json();
+
+      if(post.status === 400){
+        throw response;
+      }
+
+      window.location = '/';
     }
   }catch(error){
-    const { name, email, phone } = error;
+    const { name, email, phone, employer_email } = error;
 
     invalidName.innerText = name;
     invalidEmail.innerText = email;
     invalidPhone.innerText = phone;
+    invalidEmployerEmail.innerText = employer_email;
   }
 });

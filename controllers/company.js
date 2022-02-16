@@ -11,23 +11,38 @@ router.route('/create').get(function(req, res){
 });
 
 router.route('/create').post(async function(req, res){
-  const { name, phone, email, employer_id, role, employer_email } = req.body;
+  const { name, phone, email, user_id, role, employer_email } = req.body;
 
-  try {
-    const newCompany = await company.create({ name, email, phone});
-    await user.findByIdAndUpdate(employer_id, {
-      '$push': {
-        work_at: {
-          company_id: newCompany._id,
-          role
-        }
+  user.findOne({ email: employer_email }, async function(err, $){
+    
+    try {
+      if($ === null){
+        throw { name: 'employee email not found', msg: 'This email is not existed' };
       }
-    });
-  
-    res.status(200).json({ message: 'Create a company successfully' });
-  }catch(error){
-    res.status(400).json(companyErrorHandler(error));
-  }
+
+      const newCompany = await company.create({ name, phone, email });
+
+      await user.findByIdAndUpdate(user_id, {
+        '$push': {
+          work_at: {
+            company_id: newCompany._id,
+            role
+          }
+        }
+      });
+
+      $.work_at.push({
+        company_id: newCompany._id,
+        role: 'employer'
+      });
+
+      await $.save();
+
+      res.status(200).json({ msg: 'Company create successfully' });
+    }catch(err){
+      res.status(400).json(companyErrorHandler(err));
+    }
+  });
 });
 
 module.exports = router;

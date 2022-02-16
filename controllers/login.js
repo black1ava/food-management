@@ -23,7 +23,6 @@ router.route('/').post(async function(req, res){
     res.status(200).json({ massage: 'login succesfully '});
 
   }catch(error){
-    console.log(error)
     res.status(400).json(error);
   }
 });
