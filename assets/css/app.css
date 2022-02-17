@@ -12,3 +12,9 @@
 .app-hidden {
   display: none;
 }
+
+.app-grid{
+  display: grid;
+  grid-template-columns: repeat(auto-fill, 25vw);
+  gap: 1em;
+}

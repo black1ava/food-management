@@ -54,7 +54,7 @@ createBtn.addEventListener('click', async function(e){
           email: email.value,
           phone: phone.value,
           role: 'employer',
-          employer_id: user.id,
+          user_id: user.id,
           employer_email: employerEmail.value
         })
       });

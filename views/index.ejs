@@ -1,3 +1,45 @@
-<%- include('layout/header') %>
-
-<%- include('layout/footer') %>
+<%- include('layout/home/header') %>
+  <% if(companies.length > 0){ %>
+    <div class="card">
+      <div class="card-body">
+        <div class="card-header d-flex flex-row justify-content-between align-items-center">
+          <h2>Companies</h2>
+          <button class="btn btn-primary">New company</button>
+        </div>
+          <div class="app-grid">
+            <% companies.forEach(function(company){ %>
+              <div class="card">
+                <div class="card-body">
+                  <div class="card-header">
+                    <h4>
+                      <a href="/company/<%= company.id %>" class="card-link">
+                        <%= company.name %>
+                      </a>
+                    </h4>
+                  </div>
+                </div>
+              </div>
+            <% }) %>
+          </div>
+      </div>
+    </div>
+  <% }else{ %>
+    <div class="d-flex flex-row justify-content-center">
+      <div class="card w-50">
+        <div class="card-body">
+          <div class="card-header">
+            <h2>Welcome</h2>
+          </div>
+          <div class="d-flex-flex-column">
+            <div>
+              <p>Welcome to Food Management System! We will help you boost the performance in your restaurant. Are you curious how we help you? Tell us about your company first.</p>
+            </div>
+            <div class="d-flex flex-row justify-content-end">
+              <a href="/company/create" class="btn btn-primary">Create company</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  <% } %>
+<%- include('layout/home/footer') %>
