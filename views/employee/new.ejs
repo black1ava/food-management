@@ -5,6 +5,7 @@
         <h2>New employee</h2>
       </div>
       <form>
+        <input type="hidden" value="<%= company._id %>" id="company-id">
         <div class="form-group">
           <div class="custom-control custom-checkbox">
             <input type="checkbox" id="has-account" class="custom-control-input">
@@ -36,9 +37,20 @@
           <div class="form-group">
             <label for="employee-email">Employee email</label>
             <input type="email" id="employee-email" class="form-control">
+            <small class="text-danger" id="invalid-employee-email"></small>
           </div>
         </div>
-        <button class="btn btn-primary">Add</button>
+        <div class="form-group">
+          <select id="role" class="custom-select">
+            <option value="">Please select your employee role</option>
+            <option value="service">Service</option>
+            <option value="food_service">Food service</option>
+            <option value="chef_manager">Chef manager</option>
+            <option value="cashier">Cashier</option>
+          </select>
+          <small class="text-danger" id="invalid-role"></small>
+        </div>
+        <button class="btn btn-primary" id="add-btn">Add</button>
       </form>
     </div>
   </div>

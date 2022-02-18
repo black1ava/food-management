@@ -57,8 +57,6 @@ router.route('/create').post(async function(req, res){
         }
       });
 
-      const $ = await user.findById(user_id);
-
       res.status(200).json({ msg: 'Create company successfully'});
     }catch(err){
       res.status(400).json(companyErrorHandler(err));
@@ -107,6 +105,43 @@ router.route('/:id/employees/new').get(async function(req, res){
   const $company = await company.findById(id);
 
   res.render('employee/new', { company: $company });
+});
+
+router.route('/:id/employees/new').post(async function(req, res){
+  const { id } = req.params;
+  const { username, email, password, role, employee_email } = req.body;
+
+  try {
+    const $company = await company.findById(id);
+
+    if(employee_email === ''){
+      const $user = new user({ username, email, password });
+
+      $user.work_at.push({
+        company_id: $company._id,
+        role
+      });
+      
+      await $user.save();
+    }else{
+      user.findOne({ email: employee_email}, async function(err, $){
+        if($ === null){
+         throw { employee_email: 'This email does not exist' }
+        }
+
+        $.work_at.push({
+          company_id: $company._id,
+          role
+        });
+
+        await $.save();
+      });
+    }
+
+    res.status(200).json({ msg: 'Add employee successfully' });
+  }catch(error){
+    res.status(400).json(error);
+  }
 });
 
 module.exports = router;
