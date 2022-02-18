@@ -72,7 +72,41 @@ router.route('/:id').get(async function(req, res){
 
   const $company = await company.findById(id);
 
-  res.render('company/index', { company: $company });
+  res.render('company/show', { company: $company });
+});
+
+router.route('/:id/employees').get(async function(req, res){
+  const { id } = req.params
+
+  const users = await user.find();
+
+  const employees = users.filter(function(user){
+    return user.work_at.some(function(w){
+      return w.company_id === id;
+    })
+  });
+
+  const $employees = employees.map(function(employee){
+    return ({
+      id: employee._id,
+      name: employee.username,
+      email: employee.email,
+      role: employee.work_at.find(w => w.company_id === id ).role
+    });
+  });
+
+  const $company = await company.findById(id);
+
+  return res.render('employee/index', { employees: $employees, company: $company });
+});
+
+router.route('/:id/employees/new').get(async function(req, res){
+
+  const { id } = req.params;
+
+  const $company = await company.findById(id);
+
+  res.render('employee/new', { company: $company });
 });
 
 module.exports = router;

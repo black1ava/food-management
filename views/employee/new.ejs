@@ -1,0 +1,46 @@
+<%- include('../layout/company/header') %>
+  <div class="card">
+    <div class="card-body">
+      <div class="card-header">
+        <h2>New employee</h2>
+      </div>
+      <form>
+        <div class="form-group">
+          <div class="custom-control custom-checkbox">
+            <input type="checkbox" id="has-account" class="custom-control-input">
+            <label for="has-account" class="custom-control-label">My employee already has an account</label>
+          </div>
+        </div>
+        <div id="no-account">
+          <div class="form-group">
+            <label for="username">Username</label>
+            <input type="text" id="username" class="form-control">
+            <small class="text-danger" id="username-invalid"></small>
+          </div>
+          <div class="form-group">
+            <label for="email">Email</label>
+            <input type="email" id="email" class="form-control">
+            <small class="text-danger" id="email-invalid"></small>
+          </div>
+          <div class="form-group">
+            <label for="password">Password</label>
+            <input type="password" id="password" class="form-control">
+            <small class="text-danger" id="password-invalid"></small>
+          </div>
+          <div class="form-group">
+            <label for="password_confirmation">Confirm password</label>
+            <input type="password" id="password_confirmation" class="form-control">
+          </div>
+        </div>
+        <div id="yes-account" class="app-hidden">
+          <div class="form-group">
+            <label for="employee-email">Employee email</label>
+            <input type="email" id="employee-email" class="form-control">
+          </div>
+        </div>
+        <button class="btn btn-primary">Add</button>
+      </form>
+    </div>
+  </div>
+  <script src="/assets/js/employee/new.js"></script>
+<%- include('../layout/company/footer') %>
