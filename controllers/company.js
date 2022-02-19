@@ -3,6 +3,7 @@ const authorized = require('../middlewares/authorized');
 const company = require('../models/company');
 const companyErrorHandler = require('../errorHandling/company');
 const user = require('../models/user');
+const userErrorHandling = require('../errorHandling/signup');
 
 router.use(authorized);
 
@@ -31,13 +32,15 @@ router.route('/create').post(async function(req, res){
             }
           }
         });
-  
-        $.work_at.push({
-          company_id: newCompany._id,
-          role: 'employer'
+
+        await user.findOneAndUpdate({ email: employer_email }, {
+          '$push': {
+            work_at: {
+              company_id: newCompany._id,
+              role: 'employer'
+            }
+          }
         });
-  
-        await $.save();
   
         res.status(200).json({ msg: 'Create company successfully' });
       }catch(err){
@@ -115,32 +118,42 @@ router.route('/:id/employees/new').post(async function(req, res){
     const $company = await company.findById(id);
 
     if(employee_email === ''){
-      const $user = new user({ username, email, password });
-
-      $user.work_at.push({
-        company_id: $company._id,
-        role
+      console.log(password);
+      const $user = await user.create({ 
+        username, 
+        email, 
+        password, 
+        work_at: [{ 
+          company_id: $company._id, role 
+        }] 
       });
-      
-      await $user.save();
+
+      res.status(200).json({ msg: 'Add employee successfully' });
     }else{
       user.findOne({ email: employee_email}, async function(err, $){
-        if($ === null){
-         throw { employee_email: 'This email does not exist' }
+
+        try {
+          if($ === null){
+           throw { employee_email: 'This email does not exist' }
+          }
+
+          await user.findOneAndUpdate({ email: employee_email }, {
+            '$push': {
+              work_at: {
+                company_id: $company._id,
+                role
+              }
+            }
+          });
+
+          res.status(200).json({ msg: 'Add employee successfully' });
+        }catch(error){
+          res.status(400).json(error);
         }
-
-        $.work_at.push({
-          company_id: $company._id,
-          role
-        });
-
-        await $.save();
       });
     }
-
-    res.status(200).json({ msg: 'Add employee successfully' });
   }catch(error){
-    res.status(400).json(error);
+    res.status(400).json(userErrorHandling(error));
   }
 });
 

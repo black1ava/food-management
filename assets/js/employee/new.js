@@ -27,11 +27,15 @@ const employeeEmail = document.getElementById('employee-email');
 const passwordInvalid = document.getElementById('password-invalid');
 const invalidRole = document.getElementById('invalid-role');
 const invalidEmployeeEmail = document.getElementById('invalid-employee-email');
+const usernameInvalid = document.getElementById('username-invalid');
+const emailInvalid = document.getElementById('email-invalid');
 
 handleChange(password, passwordInvalid);
 handleChange(passwordConfirmation, passwordInvalid);
 handleChange(role, invalidRole, 'select');
 handleChange(employeeEmail, invalidEmployeeEmail);
+handleChange(username, usernameInvalid);
+handleChange(email, emailInvalid);
 
 addBtn.addEventListener('click', async function(e){
   e.preventDefault();
@@ -42,7 +46,7 @@ addBtn.addEventListener('click', async function(e){
     }else{
       if(hasAccount.checked){
         if(employeeEmail.value === ''){
-          throw { employeeEmail: 'Please enter your employee email' };
+          throw { employee_email: 'Please enter your employee email' };
         }
 
         const post = await fetch(`/company/${ companyId }/employees/new`, {
@@ -65,7 +69,7 @@ addBtn.addEventListener('click', async function(e){
           throw response;
         }
 
-        console.log(response);
+        window.location = `/company/${ companyId }/employees`;
       }else{
         if(password.value === passwordConfirmation.value){
           const post = await fetch(`/company/${ companyId }/employees/new`, {
@@ -78,7 +82,7 @@ addBtn.addEventListener('click', async function(e){
               email: email.value,
               password: password.value,
               role: role.value,
-              employee_email: employeeEmail
+              employee_email: employeeEmail.value
             })
           });
 
@@ -88,7 +92,7 @@ addBtn.addEventListener('click', async function(e){
             throw response;
           }
 
-          console.log(response);
+          window.location = `/company/${ companyId }/employees`;
 
         }else{
           throw { password: 'Password is not matched' };
@@ -97,10 +101,10 @@ addBtn.addEventListener('click', async function(e){
     }
   }catch(error){
 
-    console.log(error);
-
     passwordInvalid.innerText = error.password ?? '';
     invalidRole.innerText = error.role ?? '';
-    invalidEmployeeEmail.innerText = error.employeeEmail ?? '';
+    invalidEmployeeEmail.innerText = error.employee_email ?? '';
+    usernameInvalid.innerText = error.email ?? '';
+    emailInvalid.innerText = error.email ?? '';
   }
 });
