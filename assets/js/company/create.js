@@ -53,7 +53,7 @@ createBtn.addEventListener('click', async function(e){
           name: name.value,
           email: email.value,
           phone: phone.value,
-          role: 'employer',
+          role: 'Employer',
           user_id: user.id,
           employer_email: employerEmail.value
         })

@@ -104,7 +104,7 @@ addBtn.addEventListener('click', async function(e){
     passwordInvalid.innerText = error.password ?? '';
     invalidRole.innerText = error.role ?? '';
     invalidEmployeeEmail.innerText = error.employee_email ?? '';
-    usernameInvalid.innerText = error.email ?? '';
+    usernameInvalid.innerText = error.username ?? '';
     emailInvalid.innerText = error.email ?? '';
   }
 });
