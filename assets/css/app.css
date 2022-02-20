@@ -18,3 +18,7 @@
   grid-template-columns: repeat(auto-fill, minmax(300px, 720px));
   gap: 1em;
 }
+
+.app-non-link {
+  cursor: pointer;
+}

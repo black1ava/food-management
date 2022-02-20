@@ -2,6 +2,7 @@ const router = require('express').Router();
 const jwt = require('jsonwebtoken');
 const authorized = require('../middlewares/authorized');
 const user = require('../models/user');
+const company = require('../models/company');
 
 router.use(authorized);
 

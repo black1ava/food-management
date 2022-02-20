@@ -4,6 +4,7 @@ const company = require('../models/company');
 const companyErrorHandler = require('../errorHandling/company');
 const user = require('../models/user');
 const userErrorHandling = require('../errorHandling/signup');
+const jwt = require('jsonwebtoken');
 
 router.use(authorized);
 
@@ -67,47 +68,85 @@ router.route('/create').post(async function(req, res){
   }
 });
 
+async function getRole(token, id){
+  return jwt.verify(token, process.env.SECRET, async function(err, decodedToken){
+    const employee_id = decodedToken.id;
+    const employee = await user.findById(employee_id);
+
+    const work_ats = employee.work_at;
+    const work_at = work_ats.find(function(work_at){
+      return work_at.company_id === id;
+    });
+
+    const { role } = work_at;
+
+    return role;
+  });
+}
+
+
 router.route('/:id').get(async function(req, res){
 
   const { id } = req.params;
+  const token = req.cookies['authorized_token'];
+
+  const role = await getRole(token, id);
 
   const $company = await company.findById(id);
 
-  res.render('company/show', { company: $company });
+  res.render('company/show', { company: $company, role });
 });
 
 router.route('/:id/employees').get(async function(req, res){
   const { id } = req.params
 
-  const users = await user.find();
+  const token = req.cookies['authorized_token'];
 
-  const employees = users.filter(function(user){
-    return user.work_at.some(function(w){
-      return w.company_id === id;
-    })
-  });
+  const role = await getRole(token, id);
+  
+  if(role === 'employer'){
+    const users = await user.find();
 
-  const $employees = employees.map(function(employee){
-    return ({
-      id: employee._id,
-      name: employee.username,
-      email: employee.email,
-      role: employee.work_at.find(w => w.company_id === id ).role
+    const employees = users.filter(function(user){
+      return user.work_at.some(function(w){
+        return w.company_id === id;
+      })
     });
-  });
 
-  const $company = await company.findById(id);
+    const $employees = employees.map(function(employee){
+      return ({
+        id: employee._id,
+        name: employee.username,
+        email: employee.email,
+        role: employee.work_at.find(w => w.company_id === id ).role
+      });
+    });
 
-  return res.render('employee/index', { employees: $employees, company: $company });
+    const $company = await company.findById(id);
+
+   res.render('employee/index', { employees: $employees, company: $company, role });
+   return;
+  }
+
+  res.redirect('/');
+
 });
 
 router.route('/:id/employees/new').get(async function(req, res){
 
   const { id } = req.params;
+  const token = req.cookies['authorized_token'];
 
-  const $company = await company.findById(id);
+  const role = await getRole(token, id);
 
-  res.render('employee/new', { company: $company });
+  if(role === 'employer'){
+    const $company = await company.findById(id);
+
+    res.render('employee/new', { company: $company, role });
+    return;
+  }
+
+  res.redirect('/');
 });
 
 router.route('/:id/employees/new').post(async function(req, res){
