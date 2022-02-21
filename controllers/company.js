@@ -206,7 +206,19 @@ router.route('/:id/categories').get(async function(req, res){
   if(role === 'Employer' || role === 'Chef Manager'){
     const $company = await company.findById(id);
 
-    res.render('category/index', { company: $company, role });
+    const categories = await category.find({ company_id: id });
+    const $categories = categories.map(async function(category){
+      const added_by = await user.findById(category.added_by);
+      return ({
+        id: category._id,
+        name: category.name,
+        added_by: added_by.username
+      });
+    });
+
+    const _categories = await Promise.all($categories);
+
+    res.render('category/index', { company: $company, role, categories: _categories });
     return;
   }
 
@@ -239,6 +251,47 @@ router.route('/:id/categories/new').post(async function(req, res){
   }catch(error){
     res.status(400).json(error);
   }
+});
+
+router.route('/:id/categories/:category_id').get(async function(req, res){
+  const { id, category_id } = req.params;
+  const token = req.cookies['authorized_token'];
+
+  const role = await getRole(token, id);
+
+  if(role === 'Employer' || role === 'Chef Manager'){
+    const $company = await company.findById(id);
+    const $category = await category.findById(category_id);
+
+    res.render('category/show', { company: $company, role, category: $category });
+    return;
+  }
+
+  res.redirect(`/company/${ id }`);
+});
+
+router.route('/:id/categories/:category_id').put(async function(req, res){
+  const { category_id } = req.params;
+  const { name, user_id } = req.body;
+  
+  try {
+    await category.findByIdAndUpdate(category_id, {
+      name,
+      added_by: user_id
+    });
+
+    res.status(200).json({ msg: 'Updated successfully'});
+  }catch(error){
+    console.log(error);
+    res.status(400).json(error);
+  }
+})
+
+router.route('/:id/categories/:category_id').delete(async function(req, res){
+  const { category_id } = req.params;
+  await category.findByIdAndDelete(category_id);
+
+  res.status(200).json({ msg: 'Delete successfully' })
 });
 
 module.exports = router;

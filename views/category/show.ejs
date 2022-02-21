@@ -1,0 +1,19 @@
+<%- include('../layout/company/header') %>
+  <div class="card">
+    <div class="card-body">
+      <div class="card-header">
+        <h2><%= category.name %></h2>
+        <span id="category-id" hidden><%= category._id %></span>
+      </div>
+      <form>
+        <div class="form-group">
+          <label for="name">Name</label>
+          <input type="text" value="<%= category.name %>" class="form-control" id="name">
+        </div>
+        <button class="btn btn-primary" id="update-btn">Update</button>
+        <button class="btn btn-danger" id="delete-btn">Delete</button>
+      </form>
+    </div>
+  </div>
+  <script src="/assets/js/category/show.js"></script>
+<%- include('../layout/company/footer') %>

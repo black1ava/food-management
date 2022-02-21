@@ -14,7 +14,17 @@
           </tr>
         </thead>
         <tbody>
-
+          <% categories.forEach(function(category){ %>
+            <tr>
+              <td>
+                <a href="/company/<%= company._id %>/categories/<%= category.id %>" class="card-link">
+                  <%= category.id %>
+                </a>
+              </td>
+              <td><%= category.name %></td>
+              <td><%= category.added_by %></td>
+            </tr>
+          <% }) %>
         </tbody>
       </table>
     </div>
