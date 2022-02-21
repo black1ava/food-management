@@ -6,6 +6,7 @@ const user = require('../models/user');
 const userErrorHandling = require('../errorHandling/signup');
 const jwt = require('jsonwebtoken');
 const category = require('../models/category');
+const categoryErrorHandling = require('../errorHandling/category')
 
 router.use(authorized);
 
@@ -231,10 +232,15 @@ router.route('/:id/categories/new').get(async function(req, res){
 
   const role = await getRole(token, id);
 
-  if(role === 'Employer' || role === 'Chef Manager'){
+  if(role === 'Chef Manager'){
     const $company = await company.findById(id);
 
     res.render('category/new', { company:$company, role });
+    return;
+  }
+
+  if(role === 'Employer'){
+    res.redirect(`/company/${ id }/categories`);
     return;
   }
 
@@ -249,7 +255,7 @@ router.route('/:id/categories/new').post(async function(req, res){
     await category.create({ name, added_by: user_id, company_id: id });
     res.status(200).json({ msg: 'Add category successfully' });
   }catch(error){
-    res.status(400).json(error);
+    res.status(400).json(categoryErrorHandling(error));
   }
 });
 
@@ -259,11 +265,16 @@ router.route('/:id/categories/:category_id').get(async function(req, res){
 
   const role = await getRole(token, id);
 
-  if(role === 'Employer' || role === 'Chef Manager'){
+  if(role === 'Chef Manager'){
     const $company = await company.findById(id);
     const $category = await category.findById(category_id);
 
     res.render('category/show', { company: $company, role, category: $category });
+    return;
+  }
+
+  if(role === 'Employer'){
+    res.redirect(`/company/${ id }/categories`);
     return;
   }
 
@@ -292,6 +303,51 @@ router.route('/:id/categories/:category_id').delete(async function(req, res){
   await category.findByIdAndDelete(category_id);
 
   res.status(200).json({ msg: 'Delete successfully' })
+});
+
+router.route('/:id/foods').get(async function(req, res){
+  const { id } = req.params;
+  const token = req.cookies['authorized_token'];
+
+  const role = await getRole(token, id);
+
+  if(role === 'Chef Manager'){
+    const $company = await company.findById(id);
+
+    res.render('foods/index', { company: $company, role });
+    return;
+  }
+
+  if(role === 'Employer'){
+    res.redirect(`/company/${ id }/foods`);
+    return;
+  }
+
+  res.redirect(`/company/${ id }`);
+});
+
+router.route('/:id/foods/new').get(async function(req, res){
+  const { id } = req.params;
+  const token = req.cookies['authorized_token'];
+
+  const role = await getRole(token, id);
+
+  if(role === 'Employer' || role === 'Chef Manager'){
+    const $company = await company.findById(id);
+
+    const categories = await category.find({ company_id: id });
+
+
+    res.render('foods/new', { company: $company, role, categories });
+    return;
+  }
+
+  if(role === 'Employer'){
+    res.redirect(`/company/${ id }/foods`);
+    return;
+  }
+
+  res.render(`/company/${ id }`);
 });
 
 module.exports = router;

@@ -1,0 +1,48 @@
+<%- include('../layout/company/header') %>
+  <div class="card">
+    <div class="card-body">
+      <div class="card-header">
+        New food
+      </div>
+      <form>
+        <div class="form-group">
+          <label for="name">Name</label>
+          <input type="text" class="form-control" id="name">
+        </div>
+        <div class="form-group">
+          <label for="categories">Categories</label>
+          <select id="categories" class="custom-select">
+            <option value="">Please choose a food category</option>
+            <% categories.forEach(function(category){ %>
+              <option value="<%= category.name %>">
+                <%= category.name %>
+              </option>
+            <% }) %>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="price">Price</label>
+          <input type="text" class="form-control" id="price">
+        </div>
+        <div class="form-group">
+          <label>Duration:</label>
+          <div class="form-row">
+            <div class="col-md-4">
+              <label for="hour">Hour</label>
+              <input type="number" class="form-control" id="hour">
+            </div>
+            <div class="col-md-4">
+              <label for="minute">Minute</label>
+              <input type="number" class="form-control" id="minute">
+            </div>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="dish-per-day">Dish per day</label>
+          <input type="number" id="dish-per-day" class="form-control">
+        </div>
+        <button class="btn btn-primary" id="add-btn">Add</button>
+      </form>
+    </div>
+  </div>
+<%- include('../layout/company/footer') %>

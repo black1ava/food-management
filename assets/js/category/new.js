@@ -1,6 +1,7 @@
 const addBtn = document.getElementById('add-btn');
 const name = document.getElementById('name');
 const company_id = document.getElementById('c_id');
+const invalidName = document.getElementById('invalid-name');
 
 addBtn.addEventListener('click', async function(e){
   e.preventDefault();
@@ -29,5 +30,7 @@ addBtn.addEventListener('click', async function(e){
     window.location = `/company/${ c_id.innerText }/categories`;
   }catch(error){
     console.error(error);
+    const { name } = error;
+    invalidName.innerText = name;
   }
 });

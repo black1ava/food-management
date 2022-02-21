@@ -1,0 +1,25 @@
+<%- include('../layout/company/header') %>
+  <div class="card">
+    <div class="card-body">
+      <div class="card-header d-flex flex-row justify-content-between align-items-center">
+        <h2>Foods table</h2>
+        <a href="/company/<%= company._id %>/foods/new" class="btn btn-primary">New food</a>
+      </div>
+      <table class="table table-dark table-striped">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Category</th>
+            <th>Price</th>
+            <th>Duration</th>
+            <th>Dish per day</th>
+          </tr>
+        </thead>
+        <tbody>
+          
+        </tbody>
+      </table>
+    </div>
+  </div>
+<%- include('../layout/company/footer') %>
