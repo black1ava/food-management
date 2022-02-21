@@ -5,6 +5,7 @@ const companyErrorHandler = require('../errorHandling/company');
 const user = require('../models/user');
 const userErrorHandling = require('../errorHandling/signup');
 const jwt = require('jsonwebtoken');
+const category = require('../models/category');
 
 router.use(authorized);
 
@@ -210,6 +211,34 @@ router.route('/:id/categories').get(async function(req, res){
   }
 
   res.redirect(`/company/${ id }`);
+});
+
+router.route('/:id/categories/new').get(async function(req, res){
+  const { id }  = req.params;
+  const token = req.cookies['authorized_token'];
+
+  const role = await getRole(token, id);
+
+  if(role === 'Employer' || role === 'Chef Manager'){
+    const $company = await company.findById(id);
+
+    res.render('category/new', { company:$company, role });
+    return;
+  }
+
+  res.redirect(`/company/${ id }`);
+});
+
+router.route('/:id/categories/new').post(async function(req, res){
+  const { id } = req.params;
+  const { name, user_id } = req.body;
+
+  try {
+    await category.create({ name, added_by: user_id, company_id: id });
+    res.status(200).json({ msg: 'Add category successfully' });
+  }catch(error){
+    res.status(400).json(error);
+  }
 });
 
 module.exports = router;
