@@ -311,15 +311,10 @@ router.route('/:id/foods').get(async function(req, res){
 
   const role = await getRole(token, id);
 
-  if(role === 'Chef Manager'){
+  if(role === 'Employer' || role === 'Chef Manager'){
     const $company = await company.findById(id);
 
     res.render('foods/index', { company: $company, role });
-    return;
-  }
-
-  if(role === 'Employer'){
-    res.redirect(`/company/${ id }/foods`);
     return;
   }
 
@@ -332,7 +327,7 @@ router.route('/:id/foods/new').get(async function(req, res){
 
   const role = await getRole(token, id);
 
-  if(role === 'Employer' || role === 'Chef Manager'){
+  if(role === 'Chef Manager'){
     const $company = await company.findById(id);
 
     const categories = await category.find({ company_id: id });

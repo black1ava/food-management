@@ -13,7 +13,10 @@ const Schema = new mongoose.Schema({
     type: String,
     required: [true, 'Please insert price']
   },
-  duration: String,
+  duration: {
+    hour: Number,
+    minute: Number
+  },
   dish_per_day: Number
 });
 

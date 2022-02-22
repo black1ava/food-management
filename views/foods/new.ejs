@@ -10,8 +10,8 @@
           <input type="text" class="form-control" id="name">
         </div>
         <div class="form-group">
-          <label for="categories">Categories</label>
-          <select id="categories" class="custom-select">
+          <label for="category">Categories</label>
+          <select id="category" class="custom-select">
             <option value="">Please choose a food category</option>
             <% categories.forEach(function(category){ %>
               <option value="<%= category.name %>">
@@ -29,20 +29,21 @@
           <div class="form-row">
             <div class="col-md-4">
               <label for="hour">Hour</label>
-              <input type="number" class="form-control" id="hour">
+              <input type="text" class="form-control" id="hour">
             </div>
             <div class="col-md-4">
               <label for="minute">Minute</label>
-              <input type="number" class="form-control" id="minute">
+              <input type="text" class="form-control" id="minute">
             </div>
           </div>
         </div>
         <div class="form-group">
           <label for="dish-per-day">Dish per day</label>
-          <input type="number" id="dish-per-day" class="form-control">
+          <input type="text" id="dish-per-day" class="form-control">
         </div>
         <button class="btn btn-primary" id="add-btn">Add</button>
       </form>
     </div>
   </div>
+  <script src="/assets/js/food/new.js"></script>
 <%- include('../layout/company/footer') %>
