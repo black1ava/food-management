@@ -17,7 +17,24 @@
           </tr>
         </thead>
         <tbody>
-          
+          <% foods.forEach(function(food){ %>
+            <tr>
+              <td><%= food.id %></td>
+              <td><%= food.name %></td>
+              <td>
+                <% food.categories.map(function(category){ %>
+                  <span><%= category %>,</span>
+                <% }) %>
+              </td>
+              <td>$<%= food.price %></td>
+              <td>
+                <span><%= food.duration.hour %>hr <%= food.duration.minute %>mn</span>
+              </td>
+              <td>
+                <%= food.dish_per_day %>
+              </td>
+            </tr>
+          <% }) %>
         </tbody>
       </table>
     </div>

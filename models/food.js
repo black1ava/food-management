@@ -5,10 +5,7 @@ const Schema = new mongoose.Schema({
     type: String,
     required: [true, 'Please insert food name']
   },
-  category: {
-    type: String,
-    required: [true, 'Please inert food category']
-  },
+  categories: [String],
   price: {
     type: String,
     required: [true, 'Please insert price']
@@ -17,7 +14,8 @@ const Schema = new mongoose.Schema({
     hour: Number,
     minute: Number
   },
-  dish_per_day: Number
+  dish_per_day: Number,
+  company_id: String
 });
 
 module.exports = mongoose.model('food', Schema);

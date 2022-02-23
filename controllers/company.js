@@ -6,7 +6,8 @@ const user = require('../models/user');
 const userErrorHandling = require('../errorHandling/signup');
 const jwt = require('jsonwebtoken');
 const category = require('../models/category');
-const categoryErrorHandling = require('../errorHandling/category')
+const categoryErrorHandling = require('../errorHandling/category');
+const food = require('../models/food');
 
 router.use(authorized);
 
@@ -314,7 +315,33 @@ router.route('/:id/foods').get(async function(req, res){
   if(role === 'Employer' || role === 'Chef Manager'){
     const $company = await company.findById(id);
 
-    res.render('foods/index', { company: $company, role });
+    const $foods = await food.find({ company_id: id });
+
+    const _foods = $foods.map(async function(food){
+
+      const $categories = food.categories.map(function(cat){
+        return category.findById(cat);
+      });
+
+      const _categories = await Promise.all($categories);
+
+      const categories = _categories.map(function(category){
+        return category.name;
+      });
+
+      return {
+        id: food._id,
+        name: food.name,
+        categories,
+        price: food.price,
+        duration: food.duration,
+        dish_per_day: food.dish_per_day
+      };
+    });
+
+    const foods = await Promise.all(_foods);
+
+    res.render('foods/index', { company: $company, role, foods });
     return;
   }
 
@@ -343,6 +370,29 @@ router.route('/:id/foods/new').get(async function(req, res){
   }
 
   res.render(`/company/${ id }`);
+})
+
+router.route('/:id/foods/new').post(async function(req, res){
+  const { id } = req.params;
+  const { name, categories, price, hour, minute, dish_per_day } = req.body;
+
+  try {
+    await food.create({
+      name,
+      categories,
+      price,
+      duration: {
+        hour,
+        minute
+      },
+      dish_per_day,
+      company_id: id
+    });
+
+    res.status(200).json({ msg: 'created food successfully'});
+  }catch(error){
+    res.status(400).json(error);
+  }
 });
 
 module.exports = router;
