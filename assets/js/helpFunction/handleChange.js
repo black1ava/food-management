@@ -12,6 +12,14 @@ function handleChange(input, error, option = 'input'){
       });
       break;
 
+    case 'checkbox':
+      Array.prototype.forEach.call(input, function(i){
+        i.addEventListener('change', function(){
+          error.innerText = '';
+        });
+      });
+      break;
+
     default:
       break;
   }

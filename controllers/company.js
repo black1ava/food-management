@@ -8,6 +8,7 @@ const jwt = require('jsonwebtoken');
 const category = require('../models/category');
 const categoryErrorHandling = require('../errorHandling/category');
 const food = require('../models/food');
+const foodErrorHandling = require('../errorHandling/food');
 
 router.use(authorized);
 
@@ -391,8 +392,58 @@ router.route('/:id/foods/new').post(async function(req, res){
 
     res.status(200).json({ msg: 'created food successfully'});
   }catch(error){
-    res.status(400).json(error);
+    res.status(400).json(foodErrorHandling(error));
   }
+});
+
+router.route('/:id/foods/:food_id').get(async function(req, res){
+  const { id, food_id } = req.params;
+  const token = req.cookies['authorized_token'];
+
+  const role = await getRole(token, id);
+
+  if(role === 'Chef Manager'){
+    const $company = await company.findById(id);
+
+    const categories = await category.find({ company_id: id });
+
+    const $food = await food.findById(food_id);
+
+    res.render('foods/edit', { company: $company, role, categories, food: $food });
+    return;
+  }
+
+  res.redirect(`/company/${ id }`);
+});
+
+router.route('/:id/foods/:food_id').put(async function(req, res){
+  const { food_id } = req.params;
+  const { name, price, categories, hour, minute, dish_per_day } = req.body;
+
+  try {
+    await food.findByIdAndUpdate(food_id, {
+      name,
+      price,
+      categories,
+      duration: {
+        hour,
+        minute
+      },
+      dish_per_day
+    });
+
+    res.status(200).json({ msg: 'Update food successfully' });
+  }catch(error){
+    res.status(400).json(foodErrorHandling(error));
+  }
+});
+
+router.route('/:id/foods/:food_id').delete(async function(req, res){
+  const { food_id } = req.params;
+
+  await food.findByIdAndDelete(food_id);
+
+  res.status(200).json({ msg: 'Food deleted successfully' });
 });
 
 module.exports = router;

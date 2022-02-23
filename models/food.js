@@ -14,7 +14,10 @@ const Schema = new mongoose.Schema({
     hour: Number,
     minute: Number
   },
-  dish_per_day: Number,
+  dish_per_day: {
+    type: Number,
+    required: [true, 'Please set amount that be served per day']
+  },
   company_id: String
 });
 

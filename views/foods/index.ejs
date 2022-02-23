@@ -19,7 +19,11 @@
         <tbody>
           <% foods.forEach(function(food){ %>
             <tr>
-              <td><%= food.id %></td>
+              <td>
+                <a href="/company/<%= company._id %>/foods/<%= food.id %>" class="card-link">
+                  <%= food.id %>
+                </a>
+              </td>
               <td><%= food.name %></td>
               <td>
                 <% food.categories.map(function(category){ %>

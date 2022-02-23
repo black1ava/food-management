@@ -2,19 +2,31 @@
   <div class="card">
     <div class="card-body">
       <div class="card-header">
-        <h2>New food</h2>
+        <h2>Edit food</h2>
       </div>
       <form>
+        <input type="hidden" id="food-id" value="<%= food._id %>">
         <div class="form-group">
           <label for="name">Name</label>
-          <input type="text" class="form-control" id="name">
+          <input type="text" class="form-control" id="name" value="<%= food.name %>">
           <small class="text-danger" id="invalid-name"></small>
         </div>
         <div class="form-group">
           <label>Categories</label>
           <% categories.forEach(function(category){ %>
             <div class="custom-control custom-checkbox">
-              <input type="checkbox" name="category[]" id="<%= category._id %>" value="<%= category._id %>" class="custom-control-input">
+              <input 
+                type="checkbox" 
+                name="category[]" 
+                id="<%= category._id %>" 
+                value="<%= category._id %>" 
+                class="custom-control-input"
+                <% food.categories.forEach(function(cat){ %>
+                  <% if((category._id).toString() === cat){ %>
+                    checked
+                  <% } %>
+                <% }) %>
+              >
               <label for="<%= category._id %>" class="custom-control-label"><%= category.name %></label>
             </div>
           <% }) %>
@@ -26,7 +38,7 @@
             <div class="input-group-prepend">
               <span class="input-group-text">$</span>
             </div>
-            <input type="text" class="form-control" id="price">
+            <input type="text" class="form-control" id="price" value="<%= food.price %>">
           </div>
           <small class="text-danger" id="invalid-price"></small>
         </div>
@@ -36,22 +48,25 @@
           <div class="form-row">
             <div class="col-md-4">
               <label for="hour">Hour</label>
-              <input type="text" class="form-control" id="hour">
+              <input type="text" class="form-control" id="hour" <% if(food.duration.hour !== 0){ %> value="<%= food.duration.hour %>" <% } %> >
             </div>
             <div class="col-md-4">
               <label for="minute">Minute</label>
-              <input type="text" class="form-control" id="minute">
+              <input type="text" class="form-control" id="minute" <% if(food.duration.minute !== 0){ %> value="<%= food.duration.minute %>" <% } %>>
             </div>
           </div>
         </div>
         <div class="form-group">
           <label for="dish-per-day">Dish per day</label>
-          <input type="text" id="dish-per-day" class="form-control">
+          <input type="text" id="dish-per-day" class="form-control" value="<%= food.dish_per_day %>">
           <small class="text-danger" id="invalid-dish-per-day"></small>
         </div>
-        <button class="btn btn-primary" id="add-btn">Add</button>
+        <button class="btn btn-primary" id="update-btn">Update</button>
+        <button class="btn btn-danger" id="delete-btn">Delete</button>
+        <a href="/company/<%= company._id %>/foods" class="btn btn-secondary">Cancel</a>
       </form>
     </div>
   </div>
-  <script src="/assets/js/food/new.js"></script>
+  <script src="/assets/js/food/edit.js"></script>
+  <script src="/assets/js/food/delete.js"></script>
 <%- include('../layout/company/footer') %>

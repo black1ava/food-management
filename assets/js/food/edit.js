@@ -4,12 +4,13 @@ const price = document.getElementById('price');
 const hour = document.getElementById('hour');
 const minute = document.getElementById('minute');
 const dishPerDay = document.getElementById('dish-per-day');
-const addBtn = document.getElementById('add-btn');
+const updateBtn = document.getElementById('update-btn');
 const company_id = document.getElementById('c_id');
 const invalidName = document.getElementById('invalid-name');
 const invalidPrice = document.getElementById('invalid-price');
 const invalidCategory = document.getElementById('invalid-category');
 const invalidDishPerDay = document.getElementById('invalid-dish-per-day');
+const foodId = document.getElementById('food-id');
 
 handleChange(name, invalidName);
 handleChange(price, invalidPrice);
@@ -45,7 +46,7 @@ dishPerDay.addEventListener('input', function(){
   prevDishPerDayValue = isInteger(this.value) ? this.value : prevDishPerDayValue;
 });
 
-addBtn.addEventListener('click', async function(e){
+updateBtn.addEventListener('click', async function(e){
   e.preventDefault();
 
   const categories = [];
@@ -62,8 +63,8 @@ addBtn.addEventListener('click', async function(e){
       throw { category: 'Please select a food category' }
     }
 
-    const post = await fetch(`/company/${ company_id.innerText }/foods/new`, {
-      method: 'post',
+    const post = await fetch(`/company/${ company_id.innerText }/foods/${ foodId.value}`, {
+      method: 'put',
       headers: {
         'Content-Type': 'application/json'
       },
@@ -85,6 +86,7 @@ addBtn.addEventListener('click', async function(e){
 
     window.location = `/company/${ company_id.innerText }/foods`;
   }catch(error){
+    console.log(error);
     invalidName.innerText = error.name ?? '';
     invalidPrice.innerText = error.price ?? '';
     invalidDishPerDay.innerText = error.dish_per_day ?? '';
