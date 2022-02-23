@@ -179,6 +179,10 @@ router.route('/:id/employees/new').post(async function(req, res){
            throw { employee_email: 'This email does not exist' }
           }
 
+          if($.work_at.some(company => company.company_id === ($company._id).toString())){
+            throw { employee_email: 'This employee already exist in your company' };
+          }
+
           await user.findOneAndUpdate({ email: employee_email }, {
             '$push': {
               work_at: {
