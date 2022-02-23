@@ -98,7 +98,9 @@ router.route('/:id').get(async function(req, res){
 
   const $company = await company.findById(id);
 
-  res.render('company/show', { company: $company, role });
+  const foods = await food.find({ company_id: id });
+
+  res.render('company/show', { company: $company, role, foods });
 });
 
 router.route('/:id/employees').get(async function(req, res){

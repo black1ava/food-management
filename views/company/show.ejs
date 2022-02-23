@@ -1,3 +1,5 @@
 <%- include('../layout/company/header' ) %>
-
+  <% if(role === 'Service'){ %>
+    <%- include('../service/index') %>
+  <% } %>
 <%- include('../layout/company/footer' ) %>
