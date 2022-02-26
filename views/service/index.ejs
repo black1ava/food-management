@@ -9,25 +9,41 @@
         <label for="table-id">Table ID</label>
         <select id="table-id" class="custom-select">
           <option value="">Please choose table</option>
+          <% tables.forEach(function(table){ %>
+            <option value="<%= table._id %>"><%= table.name %></option>
+          <% }) %>
         </select>
       </div>
-      <div class="form-group">
-        <div class="form-row">
-          <div class="col-md-4">
-            <label for="name-0">Food name</label>
-            <input list="list-0" id="name-0" class="form-control">
-            <datalist id="list-0">
-              <% foods.forEach(function(food){ %>
-                <option value="<%= food.name %>">
-              <% }) %>
-            </datalist>
+      <div class="card">
+        <div class="card-body">
+          <div class="card-header d-flex justify-content-between align-items-center">
+            <h4>Place orders</h4>
+            <button class="btn btn-primary" id="add-order-btn">Add order</button>
           </div>
-          <div class="col-md-4">
-            <label for="amount-0">Amount</label>
-            <input type="text" class="form-control">
+          <div id="app-order">
+            <div class="form-group">
+              <div class="form-row">
+                <div class="col-md-4">
+                  <label for="name-0">Food name</label>
+                  <input list="list-0" id="name-0" class="form-control">
+                  <datalist id="list-0">
+                    <% foods.forEach(function(food){ %>
+                      <option value="<%= food._id %>"><%= food.name %></option>
+                    <% }) %>
+                  </datalist>
+                </div>
+                <div class="col-md-4">
+                  <label for="amount-0">Amount</label>
+                  <input type="text" id="amount-0" class="is-integer form-control">
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
+      <br>
+      <button class="btn btn-primary">Order</button>
     </form>
   </div>
 </div>
+<script src="/assets/js/service/index.js"></script>

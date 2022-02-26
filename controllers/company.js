@@ -102,7 +102,14 @@ router.route('/:id').get(async function(req, res){
 
   const foods = await food.find({ company_id: id });
 
-  res.render('company/show', { company: $company, role, foods });
+  const tables = await table.find({ company_id: id });
+
+  res.render('company/show', { 
+    company: $company, 
+    role, 
+    foods,
+    tables
+  });
 });
 
 router.route('/:id/employees').get(async function(req, res){
