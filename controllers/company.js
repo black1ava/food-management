@@ -9,6 +9,8 @@ const category = require('../models/category');
 const categoryErrorHandling = require('../errorHandling/category');
 const food = require('../models/food');
 const foodErrorHandling = require('../errorHandling/food');
+const table = require('../models/table');
+const tableErrorHandling = require('../errorHandling/table');
 
 router.use(authorized);
 
@@ -465,11 +467,62 @@ router.route('/:id/tables').get(async function(req, res){
 
   if(role === 'Chef Manager' || role === 'Employer'){
     const $company = await company.findById(id);
-    res.render('table/index', { company: $company, role });
+    const tables = await table.find({ company_id: id });
+    res.render('table/index', { company: $company, role, tables });
     return;
   }
 
   res.redirect(`/company/${ id }`);
+});
+
+router.route('/:id/tables').post(async function(req, res){
+  const { id } = req.params;
+  const { name } = req.body;
+
+  try {
+    const tables = await table.find({ company_id: id });
+
+    if(tables.some(table => table.name === name)){
+      throw { code: 11000 };
+    }
+
+    await table.create({ name, company_id: id });
+
+    res.status(200).json({ msg: 'Add a new table successfully' });
+  }catch(error){
+    res.status(400).json(tableErrorHandling(error));
+  }
+});
+
+router.route('/:id/tables/:table_id').put(async function(req, res){
+  const { id, table_id} = req.params;
+  const { name } = req.body;
+
+  try {
+    const tables = await table.find({ company_id: id });
+
+    if(tables.some(table => table.name === name)){
+      throw { code: 11000 };
+    }
+
+    await table.findByIdAndUpdate(table_id, {
+      name
+    });
+
+    res.status(200).json({ msg: 'Update table successfully' });
+
+  }catch(error){
+    console.log(error);
+    res.status(400).json(tableErrorHandling(error));
+  }
+});
+
+router.route('/:id/tables/:table_id').delete(async function(req, res){
+  const { table_id } = req.params;
+
+  await table.findByIdAndDelete(table_id);
+
+  res.status(400).json({ msg: 'Delete table successfully' });
 });
 
 module.exports = router;

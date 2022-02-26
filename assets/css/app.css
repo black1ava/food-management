@@ -22,3 +22,7 @@
 .app-non-link {
   cursor: pointer;
 }
+
+.app-black {
+  color: black;
+}
