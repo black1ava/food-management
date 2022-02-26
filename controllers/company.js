@@ -419,6 +419,11 @@ router.route('/:id/foods/:food_id').get(async function(req, res){
     return;
   }
 
+  if(role === 'Employer'){
+    res.render(`/company/${ id }/foods`);
+    return;
+  }
+
   res.redirect(`/company/${ id }`);
 });
 
@@ -450,6 +455,21 @@ router.route('/:id/foods/:food_id').delete(async function(req, res){
   await food.findByIdAndDelete(food_id);
 
   res.status(200).json({ msg: 'Food deleted successfully' });
+});
+
+router.route('/:id/tables').get(async function(req, res){
+  const { id } = req.params;
+  const token = req.cookies['authorized_token'];
+
+  const role = await getRole(token, id);
+
+  if(role === 'Chef Manager' || role === 'Employer'){
+    const $company = await company.findById(id);
+    res.render('table/index', { company: $company, role });
+    return;
+  }
+
+  res.redirect(`/company/${ id }`);
 });
 
 module.exports = router;
