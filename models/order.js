@@ -13,6 +13,10 @@ const Schema = new mongoose.Schema({
       }
     }
   ],
+  status: {
+    type: String,
+    default: 'pending'
+  },
   table_id: {
     type: String,
     required: [true, 'Please select a table']

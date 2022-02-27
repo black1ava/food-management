@@ -66,6 +66,12 @@ async function main(){
     input.setAttribute('order-id', `${ id }`);
   
     colMd4_1.appendChild(input);
+
+    const small = document.createElement('small');
+    small.classList.add('text-danger');
+    small.id = `invalid-${ id }`;
+
+    colMd4_1.appendChild(small);
   
     const dataList = document.createElement('datalist');
     dataList.setAttribute('id', `list-${ id }`);
@@ -92,10 +98,17 @@ async function main(){
     colMd4_2.appendChild(amountLabel);
 
     const amountInput = document.createElement('input');
-    amountInput.setAttribute('class', 'form-control');
+    amountInput.setAttribute('class', 'form-control amount is-integer');
     amountInput.setAttribute('id', `amount-${ id }`);
+    amountInput.setAttribute('order-id', `${ id }`);
 
     colMd4_2.appendChild(amountInput);
+
+    const invalidAmount = document.createElement('small');
+    invalidAmount.classList.add('text-danger');
+    invalidAmount.id = `invalid-amount-${ id }`;
+
+    colMd4_2.appendChild(invalidAmount);
 
     const close = document.createElement('button');
     close.setAttribute('class', 'close');

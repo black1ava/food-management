@@ -30,7 +30,7 @@ router.route('/company/:id/tables').get(async function(req, res){
 
 router.route('/company/:id/orders').get(async function(req, res){
   const { id } = req.params;
-  const orders = await order.find({ company_id: id });
+  const orders = await order.find({ company_id: id, status: 'pending' });
   res.status(200).json(orders);
 });
 

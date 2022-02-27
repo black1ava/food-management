@@ -1,5 +1,9 @@
 const socket = io();
 
+if(Notification.permission !== 'denied'){
+  Notification.requestPermission();
+}
+
 async function $(_orders){
   const appList = document.getElementById('app-list');
 
@@ -68,6 +72,11 @@ async function $(_orders){
 
     cardBody.appendChild(acceptBtn);
     cardBody.appendChild(rejectBtn);
+
+    if(Notification.permission === 'granted'){
+      const notification = new Notification('There\'s a new order!');
+      return;
+    }
   }
 }
 
@@ -95,6 +104,36 @@ orderBtn?.addEventListener('click', async function(event){
   const request = await fetch(`/api/v1/company/${ companyId.innerText }/foods`);
   const _foods = await request.json();
   const $foods = document.getElementsByClassName('food');
+
+  if(Array.prototype.some.call($foods, food => food.value === '')){
+    const invalid = Array.prototype.find.call($foods, food => food.value === '');
+    const orderId = invalid.getAttribute('order-id');
+    const i = document.getElementById(`invalid-${ orderId }`);
+    handleChange(invalid, i);
+    i.innerText = 'Please choose a food';
+    return;
+  }
+
+  if(!Array.prototype.every.call($foods,food => _foods.some(f => f.name === food.value))){
+    const invalid = Array.prototype.find.call($foods,food => _foods.every(f => f.name !== food.value));
+    const orderId = invalid.getAttribute('order-id');
+    const i = document.getElementById(`invalid-${ orderId }`);
+    handleChange(invalid, i);
+    i.innerText = 'We don\'t serve this food in your restaurant';
+    return;
+  }
+
+  const amounts = document.getElementsByClassName('amount');
+
+  if(Array.prototype.some.call(amounts, amount => amount.value === '')){
+    const invalid = Array.prototype.find.call(amounts, amount => amount.value === '');
+    const orderId = invalid.getAttribute('order-id');
+    const i = document.getElementById(`invalid-amount-${ orderId }`);
+    handleChange(invalid, i);
+    i.innerText = 'Please enter amount of food';
+    return;
+  }
+
   const foods = Array.prototype.map.call($foods, function(food){
     const orderId = food.getAttribute('order-id');
     const amount = document.getElementById(`amount-${ orderId }`);
@@ -105,8 +144,13 @@ orderBtn?.addEventListener('click', async function(event){
   const tableId = document.getElementById('table-id');
 
   const orders = { orders: foods, table_id: tableId.value, company_id: companyId.innerText }
+
   socket.emit('send-order', orders, function(callback){
-    console.log(callback);
+    if(callback.status === 400){
+      document.getElementById('invalid-table').innerText = 'Please select a table';
+    }else{
+      window.location = `/company/${ companyId.innerText }`;
+    }
   });
 });
 

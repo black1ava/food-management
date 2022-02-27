@@ -2,7 +2,6 @@
   <div class="card-body">
     <div class="card-header">
       <h2>Order foods</h2>
-      
     </div>
     <form>
       <div class="form-group">
@@ -13,6 +12,7 @@
             <option value="<%= table._id %>"><%= table.name %></option>
           <% }) %>
         </select>
+        <small class="text-danger" id="invalid-table"></small>
       </div>
       <div class="card">
         <div class="card-body">
@@ -26,6 +26,7 @@
                 <div class="col-md-4">
                   <label for="name-0">Food name</label>
                   <input list="list-0" id="name-0" order-id="0" class="form-control food" autocomplete="off">
+                  <small class="text-danger" id="invalid-0"></small>
                   <datalist id="list-0">
                     <% foods.forEach(function(food){ %>
                       <option value="<%= food.name %>"><%= food.name %></option>
@@ -34,7 +35,8 @@
                 </div>
                 <div class="col-md-4">
                   <label for="amount-0">Amount</label>
-                  <input type="text" id="amount-0" class="is-integer form-control" autocomplete="off">
+                  <input type="text" id="amount-0" order-id="0" class="is-integer form-control amount" autocomplete="off">
+                  <small class="text-danger" id="invalid-amount-0"></small>
                 </div>
               </div>
             </div>
