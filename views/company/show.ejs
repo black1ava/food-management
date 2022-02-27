@@ -1,5 +1,8 @@
 <%- include('../layout/company/header' ) %>
   <% if(role === 'Service'){ %>
     <%- include('../service/index') %>
+  <% }else if(role === 'Chef Manager'){ %>
+    <%- include('../chef_manager/index') %>
   <% } %>
+  <script src="/assets/js/socket/index.js"></script>
 <%- include('../layout/company/footer' ) %>
