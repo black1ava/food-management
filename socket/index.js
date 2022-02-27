@@ -8,8 +8,8 @@ module.exports = function(io){
       const { orders, company_id, table_id } = _orders;
 
       try {
-        await order.create({ orders, company_id, table_id });
-        socket.broadcast.emit('send-order', _orders);
+        const $order = await order.create({ orders, company_id, table_id });
+        socket.broadcast.emit('send-order', $order);
         callback({ status: 200, msg: 'An order created successfully' });
       }catch(error){
         callback({
@@ -17,6 +17,15 @@ module.exports = function(io){
           msg: error
         });
       }
+    });
+
+    socket.on('check-order', async function(id, status, callback){
+      await order.findByIdAndUpdate(id, { status });
+
+      callback({ 
+        status: 200,
+        msg: 'Update successfully'
+      });
     });
   });
 }

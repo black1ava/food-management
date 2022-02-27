@@ -15,7 +15,7 @@ async function $(_orders){
   const foods = await requestFoods.json();
   const tables = await requestTables.json();
 
-  const { table_id, orders } = _orders;
+  const { table_id, orders, _id } = _orders;
 
   if(appList){
     const card = document.createElement('div');
@@ -66,17 +66,20 @@ async function $(_orders){
 
     const rejectBtn = document.createElement('button');
     rejectBtn.setAttribute('class', 'btn btn-danger');
+    rejectBtn.setAttribute('order-id', `${ _id }`);
     rejectBtn.innerText = 'Reject';
+
+    rejectBtn.addEventListener('click', function(){
+      const id = this.getAttribute('order-id');
+      socket.emit('check-order', id, 'rejected', function(){
+        window.location = `/company/${ companyId.innerText }`;
+      });
+    });
 
     cardBody.appendChild(document.createElement('br'));
 
     cardBody.appendChild(acceptBtn);
     cardBody.appendChild(rejectBtn);
-
-    if(Notification.permission === 'granted'){
-      const notification = new Notification('There\'s a new order!');
-      return;
-    }
   }
 }
 
@@ -88,8 +91,8 @@ async function $$(){
   const _orders = await request.json();
 
   const _ = _orders.map(function(order){
-    const { table_id, orders } = order;
-    return $({ table_id, orders });
+    const { table_id, orders, _id } = order;
+    return $({ table_id, orders, _id });
   });
 
   await Promise.all(_);
@@ -155,5 +158,10 @@ orderBtn?.addEventListener('click', async function(event){
 });
 
 socket.on('send-order', async function(_orders){
-  await $(_orders);
+  const { table_id, orders, _id } = _orders;
+  await $({table_id, orders, _id});
+  if(Notification.permission === 'granted'){
+    const notification = new Notification('There\'s a new order!');
+    return;
+  }
 });
