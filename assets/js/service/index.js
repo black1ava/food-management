@@ -46,7 +46,7 @@ async function main(){
     const formRow = document.createElement('div');
     formRow.setAttribute('class', 'form-row');
   
-    formGroup.appendChild(formRow);
+    formGroup.appendChild(formRow);    
   
     const colMd4_1 = document.createElement('div');
     colMd4_1.setAttribute('class', 'col-md-4');
@@ -71,7 +71,7 @@ async function main(){
   
     foods.forEach(function(food){
       const option = document.createElement('option');
-      option.setAttribute('value', food._id);
+      option.setAttribute('value', food.name);
       option.innerText = food.name;
   
       dataList.appendChild(option);
@@ -95,6 +95,18 @@ async function main(){
     amountInput.setAttribute('id', `amount-${ id }`);
 
     colMd4_2.appendChild(amountInput);
+
+    const close = document.createElement('button');
+    close.setAttribute('class', 'close');
+    close.innerHTML = '&times;';
+
+    close.addEventListener('click', function(event){
+      event.preventDefault();
+
+      appOrder.removeChild(formGroup);
+    });
+
+    formRow.appendChild(close);
 
     checkIsInteger();
   });
