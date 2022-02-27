@@ -1,8 +1,22 @@
 const mongoose = require('mongoose');
 
 const Schema = new mongoose.Schema({
-  orders_id: [String],
-  table_id: String,
+  orders: [
+    {
+      food_id: {
+        type: String,
+        required: [true, 'Please choose a food']
+      },
+      amount: {
+        type: Number,
+        required: [true, 'Please enter the amount of food']
+      }
+    }
+  ],
+  table_id: {
+    type: String,
+    required: [true, 'Please select a table']
+  },
   company_id: String
 });
 

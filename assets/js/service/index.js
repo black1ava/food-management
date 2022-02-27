@@ -60,9 +60,10 @@ async function main(){
     colMd4_1.appendChild(foodNameLabel);
   
     const input = document.createElement('input');
-    input.setAttribute('class', 'form-control');
+    input.setAttribute('class', 'form-control food');
     input.setAttribute('list', `list-${ id }`);
     input.setAttribute('id', `name-${ id }`);
+    input.setAttribute('order-id', `${ id }`);
   
     colMd4_1.appendChild(input);
   
@@ -85,7 +86,7 @@ async function main(){
     formRow.appendChild(colMd4_2);
 
     const amountLabel = document.createElement('label');
-    amountLabel.setAttribute('id', `amount-${ id }`);
+    amountLabel.setAttribute('for', `amount-${ id }`);
     amountLabel.innerText = 'Amount';
 
     colMd4_2.appendChild(amountLabel);

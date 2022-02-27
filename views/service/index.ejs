@@ -7,7 +7,7 @@
     <form>
       <div class="form-group">
         <label for="table-id">Table ID</label>
-        <select id="table-id" class="custom-select">
+        <select id="table-id" class="custom-select" autocomplete="off">
           <option value="">Please choose table</option>
           <% tables.forEach(function(table){ %>
             <option value="<%= table._id %>"><%= table.name %></option>
@@ -25,7 +25,7 @@
               <div class="form-row">
                 <div class="col-md-4">
                   <label for="name-0">Food name</label>
-                  <input list="list-0" id="name-0" class="form-control">
+                  <input list="list-0" id="name-0" order-id="0" class="form-control food" autocomplete="off">
                   <datalist id="list-0">
                     <% foods.forEach(function(food){ %>
                       <option value="<%= food.name %>"><%= food.name %></option>
@@ -34,7 +34,7 @@
                 </div>
                 <div class="col-md-4">
                   <label for="amount-0">Amount</label>
-                  <input type="text" id="amount-0" class="is-integer form-control">
+                  <input type="text" id="amount-0" class="is-integer form-control" autocomplete="off">
                 </div>
               </div>
             </div>
@@ -42,7 +42,7 @@
         </div>
       </div>
       <br>
-      <button class="btn btn-primary">Order</button>
+      <button class="btn btn-primary" id="order-btn">Order</button>
     </form>
   </div>
 </div>
