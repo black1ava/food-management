@@ -23,6 +23,8 @@ module.exports = function(io){
 
       const $order = await order.findByIdAndUpdate(id, { status });
 
+      console.log($order);
+
       if(status === 'accepted'){
         socket.broadcast.emit('order-accepted', $order);
       }

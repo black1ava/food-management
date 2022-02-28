@@ -107,22 +107,30 @@ router.route('/:id').get(async function(req, res){
 
   const _orders =  await order.find({ company_id: id, status: 'pending' });
 
-  const orders = _orders.map(function(order){
-    const table = tables.find(table => (table._id).toString() === order.table_id);
-    const $foods = order.orders.map(function(order){
-      const food = foods.find(f => (f._id).toString() === order.food_id);
-      return { name: food.name, amount: order.amount };
+  function convertOrders(orders){
+    return orders.map(function(order){
+      const table = tables.find(table => (table._id).toString() === order.table_id);
+      const $foods = order.orders.map(function(order){
+        const food = foods.find(f => (f._id).toString() === order.food_id);
+        return { name: food.name, amount: order.amount };
+      });
+  
+      return { id: order._id, foods: $foods, table: table.name }
     });
+  }
 
-    return { id: order._id, foods: $foods, table: table.name }
-  });
+  const orders = convertOrders(_orders);
+
+  const _acceptedOrders = await order.find({ company_id: id, status: 'accepted' });
+  const acceptedOrders = convertOrders(_acceptedOrders);
 
   res.render('company/show', { 
     company: $company, 
     role, 
     foods,
     tables,
-    orders
+    orders,
+    acceptedOrders
   });
 });
 

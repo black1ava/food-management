@@ -10,6 +10,10 @@ const Schema = new mongoose.Schema({
       amount: {
         type: Number,
         required: [true, 'Please enter the amount of food']
+      },
+      done: {
+        type: Boolean,
+        default: false
       }
     }
   ],

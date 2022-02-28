@@ -21,6 +21,7 @@ function activateButtons(){
   Array.prototype.forEach.call(acceptBtns, function(acceptBtn){
     acceptBtn?.addEventListener('click', function(){
       const companyId = document.getElementById('c_id');
+      console.log('Hi');
       const id = this.getAttribute('order-id');
       socket.emit('check-order', id, 'accepted', function(){
         window.location = `/company/${ companyId.innerText }`;
@@ -31,8 +32,8 @@ function activateButtons(){
 
 activateButtons();
 
-async function $(_orders){
-  const appList = document.getElementById('app-list');
+async function $(_orders, div = 'app-list', isChefManager = false){
+  const appList = document.getElementById(div);
 
   const companyId = document.getElementById('c_id');
 
@@ -86,20 +87,23 @@ async function $(_orders){
       ul.appendChild(li);
     });
 
-    const acceptBtn = document.createElement('button');
-    acceptBtn.setAttribute('class', 'btn btn-primary');
-    acceptBtn.innerText = 'Accept';
-    acceptBtn.setAttribute('style', 'margin-right: .5em');
-
-    const rejectBtn = document.createElement('button');
-    rejectBtn.setAttribute('class', 'btn btn-danger');
-    rejectBtn.setAttribute('order-id', `${ _id }`);
-    rejectBtn.innerText = 'Reject';
-
-    cardBody.appendChild(document.createElement('br'));
-
-    cardBody.appendChild(acceptBtn);
-    cardBody.appendChild(rejectBtn);
+    if(isChefManager){
+      const acceptBtn = document.createElement('button');
+      acceptBtn.setAttribute('class', 'btn btn-primary btn-accept');
+      acceptBtn.setAttribute('order-id', `${ _id }`);
+      acceptBtn.innerText = 'Accept';
+      acceptBtn.setAttribute('style', 'margin-right: .5em');
+  
+      const rejectBtn = document.createElement('button');
+      rejectBtn.setAttribute('class', 'btn btn-danger btn-reject');
+      rejectBtn.setAttribute('order-id', `${ _id }`);
+      rejectBtn.innerText = 'Reject';
+  
+      cardBody.appendChild(document.createElement('br'));
+  
+      cardBody.appendChild(acceptBtn);
+      cardBody.appendChild(rejectBtn);
+    }
   }
 }
 
@@ -162,8 +166,18 @@ orderBtn?.addEventListener('click', async function(event){
 
 socket.on('send-order', async function(_orders){
   const { table_id, orders, _id } = _orders;
-  await $({table_id, orders, _id});
+  await $({table_id, orders, _id}, true);
   activateButtons();
+  if(Notification.permission === 'granted'){
+    const notification = new Notification('There\'s a new order!');
+    return;
+  }
+});
+
+socket.on('order-accepted', async function(_orders){
+  const { table_id, orders, _id } = _orders;
+  console.log({ table_id, orders, _id });
+  await $({ table_id, orders, _id}, 'app-list-fs');
   if(Notification.permission === 'granted'){
     const notification = new Notification('There\'s a new order!');
     return;

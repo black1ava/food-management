@@ -1,0 +1,27 @@
+<div class="card">
+  <div class="card-body">
+    <div class="card-header">
+      <h2>Order list</h2>
+    </div>
+    <div id="app-list-fs">
+      <% acceptedOrders.forEach(function(order){ %>
+        <div class="card">
+          <div class="card-body">
+            <div class="card-header">
+              <h2>Order for table: <%= order.table %></h2>
+            </div>
+            <ul class="list-group">
+              <% order.foods.forEach(function(food){ %>
+                <li class="list-group-item">
+                  Food: <strong><%= food.name %></strong> Amount: <strong><%= food.amount %></strong>
+                  <button class="btn btn-secondary">Done</button>
+                </li>
+              <% }) %>
+            </ul>
+            <br>
+          </div>
+        </div>
+      <% }) %>
+    </div>
+  </div>
+</div>
