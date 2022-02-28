@@ -119,6 +119,26 @@ router.route('/:id').get(async function(req, res){
     });
   }
 
+  const $orders =  await order.find({ company_id: id, status: 'accepted' });
+  const $$orders = $orders.filter(order => order.orders.every(food => food.done === false));
+  const a = $$orders.map(function(b){
+    return b.orders;
+  });
+
+  const $ = [];
+
+  a.forEach(b => b.forEach(c => $.push(c)));
+  // console.log($);
+  const c = $.map(_ => ({ id: _.food_id, amount: _.amount }));
+  const e = foods.map(f => {
+    const a = c.filter(w => w.id === (f._id).toString());
+    let o = 0;
+
+    a.forEach(b => { o += b.amount });
+    console.log(o);
+    return { name: f.name, amount: o };
+  });
+
   const orders = convertOrders(_orders);
 
   const _acceptedOrders = await order.find({ company_id: id, status: 'accepted' });
@@ -133,7 +153,8 @@ router.route('/:id').get(async function(req, res){
     foods,
     tables,
     orders,
-    acceptedOrders
+    acceptedOrders,
+    orderFoods: e
   });
 });
 

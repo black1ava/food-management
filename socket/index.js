@@ -27,6 +27,7 @@ module.exports = function(io){
 
       if(status === 'accepted'){
         socket.broadcast.emit('order-accepted', $order);
+        socket.broadcast.emit('reload');
       }
 
       callback({ 
@@ -47,10 +48,12 @@ module.exports = function(io){
 
       await order.findByIdAndUpdate(orderId, { orders: food });
 
+      socket.broadcast.emit('reload');
+
       callback({
         status: 200,
         msg: 'Update successfully'
       });
-    })
+    });
   });
 }

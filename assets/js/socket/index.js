@@ -210,3 +210,10 @@ socket.on('order-accepted', async function(_orders){
     return;
   }
 });
+
+
+const chef = document.getElementById('chef');
+
+if(chef){
+  socket.on('reload', () => window.location.reload())
+}

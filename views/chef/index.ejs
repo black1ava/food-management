@@ -1,0 +1,16 @@
+<table class="table table-dark table-striped" id="chef">
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Amount</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% orderFoods.forEach(f => { %>
+      <tr>
+        <td><%= f.name %></td>
+        <td><%= f.amount %></td>
+      </tr>
+    <% }) %>
+  </tbody>
+</table>

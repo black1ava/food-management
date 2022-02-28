@@ -5,6 +5,8 @@
     <%- include('../chef_manager/index') %>
   <% }else if(role === 'Food Service'){ %>
     <%- include('../food_service/index') %>
+  <% }else if(role === 'Chef'){ %>
+    <%- include('../chef/index') %>
   <% } %>
   <script src="/assets/js/socket/index.js"></script>
 <%- include('../layout/company/footer' ) %>
