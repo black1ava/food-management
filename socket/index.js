@@ -34,5 +34,23 @@ module.exports = function(io){
         msg: 'Update successfully'
       });
     });
+
+    socket.on('done-order', async function(orderId, foodId, callback){
+      const $order = await order.findById(orderId);
+      const food = $order.orders.map(function(f){
+        if(f.food_id === foodId){
+          f.done = true
+        }
+
+        return f;
+      });
+
+      await order.findByIdAndUpdate(orderId, { orders: food });
+
+      callback({
+        status: 200,
+        msg: 'Update successfully'
+      });
+    })
   });
 }

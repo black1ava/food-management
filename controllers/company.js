@@ -112,7 +112,7 @@ router.route('/:id').get(async function(req, res){
       const table = tables.find(table => (table._id).toString() === order.table_id);
       const $foods = order.orders.map(function(order){
         const food = foods.find(f => (f._id).toString() === order.food_id);
-        return { name: food.name, amount: order.amount };
+        return { id: food._id, name: food.name, amount: order.amount, done: order.done };
       });
   
       return { id: order._id, foods: $foods, table: table.name }
@@ -122,7 +122,10 @@ router.route('/:id').get(async function(req, res){
   const orders = convertOrders(_orders);
 
   const _acceptedOrders = await order.find({ company_id: id, status: 'accepted' });
-  const acceptedOrders = convertOrders(_acceptedOrders);
+  let acceptedOrders = convertOrders(_acceptedOrders);
+  acceptedOrders = acceptedOrders.filter(function(order){
+    return order.foods.every(food => food.done === false);
+  });
 
   res.render('company/show', { 
     company: $company, 

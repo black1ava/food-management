@@ -7,6 +7,7 @@ if(Notification.permission !== 'denied'){
 function activateButtons(){
   const rejectBtns = document.getElementsByClassName('btn-reject');
   const acceptBtns = document.getElementsByClassName('btn-accept');
+  const doneBtns = document.getElementsByClassName('done-btn');
 
   Array.prototype.forEach.call(rejectBtns, function(rejectBtn){
     rejectBtn?.addEventListener('click', function(){
@@ -21,10 +22,21 @@ function activateButtons(){
   Array.prototype.forEach.call(acceptBtns, function(acceptBtn){
     acceptBtn?.addEventListener('click', function(){
       const companyId = document.getElementById('c_id');
-      console.log('Hi');
       const id = this.getAttribute('order-id');
       socket.emit('check-order', id, 'accepted', function(){
         window.location = `/company/${ companyId.innerText }`;
+      });
+    });
+  });
+
+  Array.prototype.forEach.call(doneBtns, function(doneBtn){
+    doneBtn?.addEventListener('click', function(){
+      const companyId = document.getElementById('c_id');
+      const orderId = this.getAttribute('order-id');
+      const foodId = this.getAttribute('food-id');
+
+      socket.emit('done-order', orderId, foodId, function(){
+        window.location.reload();
       });
     });
   });
@@ -70,9 +82,13 @@ async function $(_orders, div = 'app-list', isChefManager = false){
 
     cardHeader.appendChild(h2);
 
-    const $foods = orders.map(function(order){
+    const undoneOrder = orders.filter(function(order){
+      return order.done === false;
+    });
+
+    const $foods = undoneOrder.map(function(order){
       const f = foods.find(food => food._id === order.food_id);
-      return { name: f.name, amount: order.amount };
+      return { id: f._id, name: f.name,amount: order.amount };
     });
 
     const ul = document.createElement('ul');
@@ -83,7 +99,18 @@ async function $(_orders, div = 'app-list', isChefManager = false){
     $foods.forEach(function(food){
       const li = document.createElement('li');
       li.classList.add('list-group-item');
-      li.innerHTML = `Food: <strong>${ food.name }</strong>, Amount: <strong>${ food.amount }</strong>`
+      li.innerHTML = `Food: <strong>${ food.name }</strong>, Amount: <strong>${ food.amount }</strong>`;
+
+      if(div === 'app-list-fs'){
+        const btn = document.createElement('button');
+        btn.innerText = 'Done';
+        btn.setAttribute('class', 'btn btn-secondary done-btn');
+        btn.setAttribute('order-id', `${ _id }`);
+        btn.setAttribute('food-id', `${ food.id }`);
+
+        li.appendChild(btn);
+      }
+
       ul.appendChild(li);
     });
 
@@ -166,7 +193,7 @@ orderBtn?.addEventListener('click', async function(event){
 
 socket.on('send-order', async function(_orders){
   const { table_id, orders, _id } = _orders;
-  await $({table_id, orders, _id}, true);
+  await $({table_id, orders, _id}, 'app-list', true);
   activateButtons();
   if(Notification.permission === 'granted'){
     const notification = new Notification('There\'s a new order!');
