@@ -20,7 +20,12 @@ module.exports = function(io){
     });
 
     socket.on('check-order', async function(id, status, callback){
-      await order.findByIdAndUpdate(id, { status });
+
+      const $order = await order.findByIdAndUpdate(id, { status });
+
+      if(status === 'accepted'){
+        socket.broadcast.emit('order-accepted', $order);
+      }
 
       callback({ 
         status: 200,

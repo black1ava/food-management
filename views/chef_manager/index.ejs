@@ -4,7 +4,25 @@
       <h2>Orders list</h2>
     </div>
     <div id="app-list">
-
+      <% orders.forEach(function(order){ %>
+        <div class="card">
+          <div class="card-body">
+            <div class="card-header">
+              <h4>Order for table: <%= order.table %></h4>
+            </div>
+            <ul class="list-group">
+              <% order.foods.forEach(function(food){ %>
+                <li class="list-group-item">
+                  Food: <strong><%= food.name %></strong> Amount: <strong><%= food.amount %></strong>
+                </li>
+              <% }) %>
+            </ul>
+            <br>
+            <button class="btn btn-primary btn-accept" order-id="<%= order.id %>">Accept</button>
+            <button class="btn btn-danger btn-reject" order-id="<%= order.id %>">Reject</button>
+          </div>
+        </div>
+      <% }) %>
     </div>
   </div>
 </div>

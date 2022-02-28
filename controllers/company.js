@@ -11,6 +11,7 @@ const food = require('../models/food');
 const foodErrorHandling = require('../errorHandling/food');
 const table = require('../models/table');
 const tableErrorHandling = require('../errorHandling/table');
+const order = require('../models/order')
 
 router.use(authorized);
 
@@ -104,11 +105,24 @@ router.route('/:id').get(async function(req, res){
 
   const tables = await table.find({ company_id: id });
 
+  const _orders =  await order.find({ company_id: id, status: 'pending' });
+
+  const orders = _orders.map(function(order){
+    const table = tables.find(table => (table._id).toString() === order.table_id);
+    const $foods = order.orders.map(function(order){
+      const food = foods.find(f => (f._id).toString() === order.food_id);
+      return { name: food.name, amount: order.amount };
+    });
+
+    return { id: order._id, foods: $foods, table: table.name }
+  });
+
   res.render('company/show', { 
     company: $company, 
     role, 
     foods,
-    tables
+    tables,
+    orders
   });
 });
 

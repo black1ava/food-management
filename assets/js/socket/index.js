@@ -4,6 +4,33 @@ if(Notification.permission !== 'denied'){
   Notification.requestPermission();
 }
 
+function activateButtons(){
+  const rejectBtns = document.getElementsByClassName('btn-reject');
+  const acceptBtns = document.getElementsByClassName('btn-accept');
+
+  Array.prototype.forEach.call(rejectBtns, function(rejectBtn){
+    rejectBtn?.addEventListener('click', function(){
+      const companyId = document.getElementById('c_id');
+      const id = this.getAttribute('order-id');
+      socket.emit('check-order', id, 'rejected', function(){
+        window.location = `/company/${ companyId.innerText }`;
+      });
+    });
+  });
+
+  Array.prototype.forEach.call(acceptBtns, function(acceptBtn){
+    acceptBtn?.addEventListener('click', function(){
+      const companyId = document.getElementById('c_id');
+      const id = this.getAttribute('order-id');
+      socket.emit('check-order', id, 'accepted', function(){
+        window.location = `/company/${ companyId.innerText }`;
+      });
+    });
+  });
+}
+
+activateButtons();
+
 async function $(_orders){
   const appList = document.getElementById('app-list');
 
@@ -69,36 +96,12 @@ async function $(_orders){
     rejectBtn.setAttribute('order-id', `${ _id }`);
     rejectBtn.innerText = 'Reject';
 
-    rejectBtn.addEventListener('click', function(){
-      const id = this.getAttribute('order-id');
-      socket.emit('check-order', id, 'rejected', function(){
-        window.location = `/company/${ companyId.innerText }`;
-      });
-    });
-
     cardBody.appendChild(document.createElement('br'));
 
     cardBody.appendChild(acceptBtn);
     cardBody.appendChild(rejectBtn);
   }
 }
-
-async function $$(){
-
-  const companyId = document.getElementById('c_id');
-
-  const request = await fetch(`/api/v1/company/${ companyId.innerText }/orders`);
-  const _orders = await request.json();
-
-  const _ = _orders.map(function(order){
-    const { table_id, orders, _id } = order;
-    return $({ table_id, orders, _id });
-  });
-
-  await Promise.all(_);
-}
-
-$$();
 
 const orderBtn = document.getElementById('order-btn');
 
@@ -160,6 +163,7 @@ orderBtn?.addEventListener('click', async function(event){
 socket.on('send-order', async function(_orders){
   const { table_id, orders, _id } = _orders;
   await $({table_id, orders, _id});
+  activateButtons();
   if(Notification.permission === 'granted'){
     const notification = new Notification('There\'s a new order!');
     return;
